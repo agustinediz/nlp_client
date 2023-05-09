@@ -1,9 +1,10 @@
 Dockerfile
 README.md
 requirements.txt
-config.py
-contractions.py
-data_utils.py
-evaluation.py
-text_normalizer.py
-word2vec.py
+src/contractions.py
+src/data_utils.py
+src/evaluation.py
+src/text_normalizer.py
+src/word2vec.py
+src/config.py
+README.md
