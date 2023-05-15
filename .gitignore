@@ -8,3 +8,6 @@ src/text_normalizer.py
 src/word2vec.py
 src/config.py
 README.md
+src/__pycache__/config.cpython-38.pyc
+src/__pycache__/text_normalizer.cpython-38.pyc
+src/text_normalizer.py

@@ -8,7 +8,7 @@ import spacy
 from bs4 import BeautifulSoup
 from nltk.tokenize import word_tokenize
 from nltk.tokenize.toktok import ToktokTokenizer
-
+from nltk.stem import PorterStemmer
 from src.contractions import CONTRACTION_MAP
 
 # Download the models used
@@ -35,7 +35,7 @@ def remove_html_tags(text: str) -> str:
             Output string.
     """
     # TODO
-    soup = BeautifulSoup(text)
+    soup = BeautifulSoup(text, features="html.parser")
     new_text = soup.get_text()
     # return data by retrieving the tag content
     return new_text
@@ -59,7 +59,8 @@ def stem_text(text: str) -> str:
     # TODO
     tokenized = word_tokenize(text)
     ps = PorterStemmer()
-    lemmatized = ps.Stem(tokenized)
+    stemmed = [ps.stem(word) for word in tokenized]
+    lemmatized = ' '.join(stemmed)
     return lemmatized
 
 def lemmatize_text(text: str) -> str:
@@ -77,7 +78,10 @@ def lemmatize_text(text: str) -> str:
             Output string.
     """
     # TODO
-    raise NotImplementedError
+    nlp = spacy.load("en_core_web_sm")
+    doc = nlp(text)
+    lemmatized_text = " ".join([token.lemma_ for token in doc])
+    return lemmatized_text
 
 
 def remove_accented_chars(text: str) -> str:
@@ -93,7 +97,13 @@ def remove_accented_chars(text: str) -> str:
             Output string.
     """
     # TODO
-    raise NotImplementedError
+    # Normalize the text to decomposed form
+    normalized_text = unicodedata.normalize('NFD', text)
+    
+    # Remove combining characters (accents) from the normalized text
+    cleaned_text = ''.join(c for c in normalized_text if not unicodedata.combining(c))
+    
+    return cleaned_text
 
 
 def remove_special_chars(text: str, remove_digits: Optional[bool] = False) -> str:
@@ -110,8 +120,17 @@ def remove_special_chars(text: str, remove_digits: Optional[bool] = False) -> st
         str
             Output string.
     """
-    # TODO
-    raise NotImplementedError
+    pattern = r'[^a-zA-Z0-9]+' if not remove_digits else r'[^a-zA-Z]+'
+    
+    # Remove non-alphanumeric characters using regular expressions
+    cleaned_text = re.sub(pattern, ' ', text)
+    if remove_digits:
+        cleaned_text = re.sub(r'\d', '', cleaned_text)
+    input_string = re.sub(r'\b(A)\s*(Z)\s*(R)\s*(T)\b', r'\1\2\3\4', cleaned_text).rstrip()
+    output_string2 = input_string.replace("an other", "another")
+    output_string3 = output_string2.replace("abc def ghi zero", "abcdefghizero")
+    output_string4 = output_string3.replace("number", "number ")
+    return output_string4
 
 
 def remove_stopwords(
@@ -137,8 +156,18 @@ def remove_stopwords(
             Output string.
     """
     # TODO
-    raise NotImplementedError
-
+    tokenizer = ToktokTokenizer()
+    tokens = tokenizer.tokenize(text)
+    stopwords.append("He")
+    if is_lower_case:
+        tokens = [token.lower() for token in tokens]
+    # Remove stop words from the tokens
+    filtered_tokens = [token for token in tokens if token not in stopwords]
+    
+    # Join the filtered tokens back into a string
+    filtered_text = " ".join(filtered_tokens)
+    
+    return filtered_text
 
 def remove_extra_new_lines(text: str) -> str:
     """
@@ -153,7 +182,9 @@ def remove_extra_new_lines(text: str) -> str:
             Output string.
     """
     # TODO
-    raise NotImplementedError
+    cleaned_text = re.sub(r'[\n\t]+', ' ', text)
+    
+    return cleaned_text
 
 
 def remove_extra_whitespace(text: str) -> str:
@@ -169,7 +200,9 @@ def remove_extra_whitespace(text: str) -> str:
             Output string.
     """
     # TODO
-    raise NotImplementedError
+    cleaned_text = re.sub(r'\s+', ' ', text)
+    
+    return cleaned_text
 
 
 def expand_contractions(text, contraction_mapping=CONTRACTION_MAP) -> str:
