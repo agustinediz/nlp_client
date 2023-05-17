@@ -120,17 +120,14 @@ def remove_special_chars(text: str, remove_digits: Optional[bool] = False) -> st
         str
             Output string.
     """
-    pattern = r'[^a-zA-Z0-9]+' if not remove_digits else r'[^a-zA-Z]+'
-    
-    # Remove non-alphanumeric characters using regular expressions
-    cleaned_text = re.sub(pattern, ' ', text)
     if remove_digits:
-        cleaned_text = re.sub(r'\d', '', cleaned_text)
-    input_string = re.sub(r'\b(A)\s*(Z)\s*(R)\s*(T)\b', r'\1\2\3\4', cleaned_text).rstrip()
-    output_string2 = input_string.replace("an other", "another")
-    output_string3 = output_string2.replace("abc def ghi zero", "abcdefghizero")
-    output_string4 = output_string3.replace("number", "number ")
-    return output_string4
+        pattern = r'[^a-zA-Z\s]' 
+    else:
+        pattern = r'[^a-zA-Z0-9\s]'
+    
+    text = re.sub(pattern, '', text)
+
+    return text
 
 
 def remove_stopwords(

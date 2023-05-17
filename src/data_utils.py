@@ -63,11 +63,11 @@ def split_data(
     # TODO
     X_train, y_train, X_test, y_test = None, None, None, None
     # Assign to X_train all the columns from train except "positive"
-    X_train = train.drop("positive", axis = 1)
+    X_train = train["review"]
     # Assign to y_train the "positive" column
     y_train = train["positive"]
     # Assign to X_test all the columns from test except "positive"
-    X_test = test.drop("positive", axis = 1)
+    X_test = test["review"]
     # Assign to y_test the "positive" column
     y_test = test["positive"]
 
