@@ -28,4 +28,26 @@ def vectorizer(
             document in the corpus.
     """
     # TODO
-    raise NotImplementedError
+    # Initialize an empty numpy array to store the document vectors
+    corpus_vectors = np.zeros((len(corpus), num_features), dtype=np.float32)
+    
+    # Iterate through each document in the corpus
+    for i, document in enumerate(corpus):
+        document_vector = np.zeros(num_features, dtype=np.float32)
+        num_words = 0
+        
+        # Iterate through each word in the document
+        for word in document:
+            if word in model.wv:
+                # If the word is in the Word2Vec model's vocabulary, add its vector to the document vector
+                document_vector += model.wv[word]
+                num_words += 1
+        
+        # Average the document vector by dividing it by the number of words in the document
+        if num_words > 0:
+            document_vector /= num_words
+        
+        # Store the document vector in the corpus vectors array
+        corpus_vectors[i] = document_vector
+    
+    return corpus_vectors
